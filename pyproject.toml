@@ -1,0 +1,14 @@
+[project]
+name = "FS_auth_middleware"
+version = "0.1.0"
+description = "Middleware e ferramentas para autenticação JWT e permissões reutilizáveis com Django"
+authors = [{ name="Cássio Renan Rodrigues de Paula", email="cassio.rr.de.paula@gmail.com" }]
+license = {text = "IFRS - Campus Restinga"}
+dependencies = [
+    "djangorestframework",
+    "djangorestframework-simplejwt"
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
