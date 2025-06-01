@@ -16,7 +16,7 @@ def has_any_permission(required_permissions):
             if any(p in user_permissions for p in required_permissions):
                 return view_func(request, *args, **kwargs)
 
-            return Response({'detail': 'Permissão negada.'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'message': 'Permissão negada.'}, status=status.HTTP_403_FORBIDDEN)
 
         return _wrapped_view
     return decorator

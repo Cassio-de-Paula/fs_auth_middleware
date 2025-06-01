@@ -5,4 +5,4 @@ Pacote Python para autenticação JWT e permissões reutilizáveis com Django Re
 ## Instalação
 
 ```bash
-pip install git+https://github.com/seu-usuario/FS_auth_middleware.git
+pip install git+https://github.com/Cassio-de-Paula/FS_auth_middleware.git
