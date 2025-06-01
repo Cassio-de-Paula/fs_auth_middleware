@@ -6,6 +6,12 @@ class HasAnyPermission(BasePermission):
     """
 
     def has_permission(self, request, view):
-        user_permissions = request.auth.get('permissions', []) if request.auth else []
+        jwt_payload = getattr(request, 'auth', None)
+
+        if not jwt_payload or not isinstance(jwt_payload, dict):
+            return False  # Token ausente ou malformado
+
+        user_permissions = jwt_payload.get('permissions', [])
         required_permissions = getattr(view, 'required_permissions', [])
+
         return any(p in user_permissions for p in required_permissions)
