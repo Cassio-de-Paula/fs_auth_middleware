@@ -45,7 +45,7 @@ def has_every_permission(required_permissions):
                 return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
             user_permissions = jwt_payload.get('permissions', [])
-            if any(p in user_permissions for p in required_permissions):
+            if all(p in user_permissions for p in required_permissions):
                 return view_func(request, *args, **kwargs)
 
             return Response({'message': 'Permissão negada.'}, status=status.HTTP_403_FORBIDDEN)
