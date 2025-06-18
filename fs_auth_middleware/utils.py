@@ -11,31 +11,29 @@ def decode_access_token(token: str):
     except jwt.InvalidSignatureError:
         try:
             headers = jwt.get_unverified_header(token)
-            kid = headers.get("kid")
-            if not kid:
+            system_id = headers.get("kid")
+            if not system_id:
                 return None
 
-            secret_key = get_secret_key_from_base_system(kid)
+            secret_key = get_secret_key_from_base_system(system_id)
             return jwt.decode(token, secret_key, algorithms=["HS256"])
         except Exception as e:
             return None
     except (jwt.ExpiredSignatureError, jwt.DecodeError):
         return None
 
-def get_secret_key_from_base_system(kid: str, original_request) -> str:
+def get_secret_key_from_base_system(system_id: str, original_request) -> str:
     access_token = original_request.COOKIES.get("access_token")
 
-    headers = {}
     cookies = {}
 
     if access_token:
-        cookies["access_token"] = access_token  # passa o mesmo cookie
+        cookies["access_token"] = access_token
 
     response = requests.get(
-        f"https://{settings.BASE_SYSTEM_URL}/system/{kid}/",
-        params={"kid": kid},
-        cookies=cookies,  # repassa cookies
-        timeout=5  # sempre bom ter timeout
+        f"https://{settings.BASE_SYSTEM_URL}/system/get/{system_id}/",
+        cookies=cookies,
+        timeout=5
     )
 
     if response.status_code == 200:
