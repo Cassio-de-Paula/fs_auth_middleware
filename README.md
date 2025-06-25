@@ -8,6 +8,8 @@ Pacote Python para autenticação JWT e permissões reutilizáveis com Django Re
 pip install git+https://github.com/Cassio-de-Paula/FS_auth_middleware.git
 ```
 
+Este middleware foi desenvolvido para intergar de forma eficiente e segura, diversos projetos django, vinculados a um sistema base que fornece a autenticação de usuários, utilizando o sistema de grupos e permissões nativo do Framework Django
+
 @is_athenticated()
 Verifica se o token do usuário é decodificável através de uma SECRET_KEY registrada no banco de dados do sistema principal
 
