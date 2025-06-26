@@ -66,7 +66,7 @@ def is_authenticated():
             if not jwt_payload:
                 return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-
+            return view_func(request, *args, **kwargs)
 
         return _wrapped_view
     return decorator
