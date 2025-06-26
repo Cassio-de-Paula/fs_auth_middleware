@@ -5,13 +5,12 @@ import requests
 def get_access_token_from_request(request):
     return request.COOKIES.get('access_token')
 
-def decode_access_token(token: str):
+def decode_access_token(token: str, request):
     try:
         return jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.InvalidSignatureError:
         try:
-            headers = jwt.get_unverified_header(token)
-            system_id = headers.get("kid")
+            system_id = request.COOKIES.get('system', None)
             if not system_id:
                 return None
 

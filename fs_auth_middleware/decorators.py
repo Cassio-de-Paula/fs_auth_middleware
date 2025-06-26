@@ -15,7 +15,7 @@ def has_any_permission(required_permissions):
             if not token:
                 return Response({'message': 'Token de autenticação não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-            jwt_payload = decode_access_token(token)
+            jwt_payload = decode_access_token(token, request)
             if not jwt_payload:
                 return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -39,7 +39,7 @@ def has_every_permission(required_permissions):
             if not token:
                 return Response({'message': 'Token de autenticação não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-            jwt_payload = decode_access_token(token)
+            jwt_payload = decode_access_token(token, request)
             if not jwt_payload:
                 return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -62,7 +62,7 @@ def is_authenticated():
             if not token:
                 return Response({'message': 'Necessário autenticar-se'}, status=status.HTTP_401_UNAUTHORIZED)
             
-            jwt_payload = decode_access_token(token)
+            jwt_payload = decode_access_token(token, request)
             if not jwt_payload:
                 return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
