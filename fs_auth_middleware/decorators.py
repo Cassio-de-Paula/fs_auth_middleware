@@ -4,10 +4,6 @@ from rest_framework import status
 from .utils import get_access_token_from_request, decode_access_token
 
 def has_any_permission(required_permissions):
-    """
-    Decorator para function-based views que exige pelo menos uma permissão do token JWT vindo do cookie access_token.
-    """
-
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
@@ -16,10 +12,15 @@ def has_any_permission(required_permissions):
                 return Response({'message': 'Token de autenticação não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
 
             jwt_payload = decode_access_token(token, request)
+
             if not jwt_payload:
                 return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
+            if jwt_payload is True:
+                return view_func(request, **args, **kwargs)
+            
             user_permissions = jwt_payload.get('permissions', [])
+
             if any(p in user_permissions for p in required_permissions):
                 return view_func(request, *args, **kwargs)
 
@@ -43,7 +44,11 @@ def has_every_permission(required_permissions):
             if not jwt_payload:
                 return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
+            if jwt_payload is True:
+                return view_func(request, **args, **kwargs)
+
             user_permissions = jwt_payload.get('permissions', [])
+            
             if all(p in user_permissions for p in required_permissions):
                 return view_func(request, *args, **kwargs)
 
@@ -53,16 +58,15 @@ def has_every_permission(required_permissions):
     return decorator
 
 def is_authenticated():
-    """Decorator para verificar se o usuário está autenticado"""
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             token = get_access_token_from_request(request)
-
             if not token:
                 return Response({'message': 'Necessário autenticar-se'}, status=status.HTTP_401_UNAUTHORIZED)
             
             jwt_payload = decode_access_token(token, request)
+
             if not jwt_payload:
                 return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
