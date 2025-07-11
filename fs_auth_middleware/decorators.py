@@ -1,13 +1,14 @@
 from functools import wraps
 from rest_framework.response import Response
 from rest_framework import status
-from .utils import get_access_token_from_request, decode_access_token
+from .utils import *
 
 def has_any_permission(required_permissions):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             token = get_access_token_from_request(request)
+            
             if not token:
                 return Response({'message': 'Token de autenticação não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -62,13 +63,19 @@ def is_authenticated():
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             token = get_access_token_from_request(request)
-            if not token:
-                return Response({'message': 'Necessário autenticar-se'}, status=status.HTTP_401_UNAUTHORIZED)
-            
-            jwt_payload = decode_access_token(token, request)
+            system = get_system_key_from_request(request)
 
-            if not jwt_payload:
-                return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+            if not token and not system:
+                return Response({'message': 'Necessário fornecer um token de autenticação ou chave de sistema válida.'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+            if system:
+                if not validate_system(system):
+                    return Response({'message': 'Chave de sistema inválida'})
+            else:
+                jwt_payload = decode_access_token(token, request)
+
+                if not jwt_payload:
+                    return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
             return view_func(request, *args, **kwargs)
 
