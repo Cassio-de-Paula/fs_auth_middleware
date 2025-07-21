@@ -11,24 +11,14 @@ def get_system_key_from_request(request):
 def decode_access_token(token: str, request):
     try:
         return jwt_decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-    
     except InvalidSignatureError:
-        system_id = request.COOKIES.get('system', None)
-
-        if not system_id:
-            return None
-
-        try:
-            return validate_system(system_id, request)
-        except Exception:
-            return None
-    
+        return None
     except (ExpiredSignatureError, DecodeError):
         return None
   
 def validate_system(system_id: str) -> bool:
     response = requests.get(
-        f"http://{settings.BASE_SYSTEM_URL}/system/get/{system_id}/",
+        f"http://{settings.BASE_SYSTEM_URL}/api/system/get/{system_id}/",
         timeout=5
     )
 
