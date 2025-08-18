@@ -18,7 +18,7 @@ def decode_access_token(token: str, request):
   
 def validate_system(system_id: str) -> bool:
     response = requests.get(
-        f"http://{settings.BASE_SYSTEM_URL}/api/system/get/{system_id}/",
+        f"http://{settings.BASE_SYSTEM_URL}/api/systems/validate/{system_id}/",
         timeout=5
     )
 
