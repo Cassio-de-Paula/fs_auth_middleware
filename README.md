@@ -12,3 +12,6 @@ Este middleware foi desenvolvido para intergar de forma eficiente e segura, dive
 
 @has_permissions()
 recebe uma lista de permissões, extrai o cookie "access_token" recebido na request, decodifica com a SECRET_KEY do projeto, verifica se as permissões obtidas do token incluem as permissões recebidas como argumento. 
+
+Ex:
+@has_permissions(['add_model', 'view_model', 'change_model', 'delete_model'])
