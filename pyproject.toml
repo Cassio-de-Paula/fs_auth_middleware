@@ -1,13 +1,21 @@
 [project]
-name = "FS_auth_middleware"
-version = "1.0.0"
+name = "fs-auth-middleware"
+version = "0.1.0"
 description = "Middleware e ferramentas para autenticação JWT e permissões reutilizáveis com Django"
+readme = "README.md"
+requires-python = ">=3.9"
 authors = [{ name="Cássio Renan Rodrigues de Paula", email="cassio.rr.de.paula@gmail.com" }]
-license = {text = "IFRS - Campus Restinga"}
+license = {text = "Proprietary"}
 dependencies = [
+    "Django>=3.2",
     "djangorestframework",
-    "djangorestframework-simplejwt"
+    "djangorestframework-simplejwt",
+    "PyJWT"
 ]
+
+[project.urls]
+Homepage = "https://github.com/SEU_USUARIO/FS_auth_middleware"
+Repository = "https://github.com/SEU_USUARIO/FS_auth_middleware"
 
 [build-system]
 requires = ["setuptools", "wheel"]
