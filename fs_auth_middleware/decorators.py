@@ -40,7 +40,7 @@ def has_permissions(required_permissions):
                 if not is_active:
                     response = Response({'message': 'Usuário inativo.'}, status=status.HTTP_401_UNAUTHORIZED)
                     response.delete_cookie('access_token')
-                    response.delete_cookie('refresh_token')
+                    response.delete_cookie('refresh_token', path='/session/')
                     return response
 
                 user_permissions = jwt_payload.get('permissions', [])
