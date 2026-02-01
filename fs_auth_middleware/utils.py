@@ -59,8 +59,7 @@ def validate_system(system_id: str) -> bool:
             return False, "Requisições entre sistemas não são autorizadas."
         if not is_valid_system_model(System):
             return False, "System model incompatível."
-        lookup_field = getattr(settings, "FS_AUTH_SYSTEM_LOOKUP_FIELD", "pk")
-        exists = System.objects.filter(**{lookup_field: system_id}).exists()
+        exists = System.objects.filter(api_key=system_id).exists()
         return exists, None
     except Exception:
         return False, "Erro ao validar credencial de sistema."
