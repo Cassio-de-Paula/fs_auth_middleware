@@ -23,17 +23,25 @@ def has_permissions(required_permissions):
                         return Response({'message': 'Método inválido para esta credencial'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
                     
                     # Tenta buscar um sistema que corresponda a chave recebida
-                    response = validate_system(system_id)
+                    is_valid, error_message = validate_system(system_id)
 
-                    if not response:
+                    if not is_valid:
+                        if error_message:
+                            return Response({'message': error_message}, status=status.HTTP_401_UNAUTHORIZED)
                         return Response({'message': 'Credencial de sistema inválida'}, status=status.HTTP_401_UNAUTHORIZED)
                     
                     return view_func(request, *args, **kwargs)
             else:
                 jwt_payload = decode_access_token(access_token, request)
-
                 if not jwt_payload:
                     return Response({'message': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+                is_active = validate_user_is_active(jwt_payload['user_id'])
+                if not is_active:
+                    response = Response({'message': 'Usuário inativo.'}, status=status.HTTP_401_UNAUTHORIZED)
+                    response.delete_cookie('access_token')
+                    response.delete_cookie('refresh_token')
+                    return response
 
                 user_permissions = jwt_payload.get('permissions', [])
             
