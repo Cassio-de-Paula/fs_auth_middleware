@@ -5,7 +5,7 @@ from .utils import *
 
 def has_permissions(required_permissions):
     """
-    Decorator para function-based views que exige todas as permissões do token JWT vindo do cookie access_token.
+    Decorator para function-based views que exige todas as permissões do token JWT vindo do cookie configurado em FS_AUTH_ACCESS_TOKEN.
     """
     def decorator(view_func):
         @wraps(view_func)
@@ -39,8 +39,8 @@ def has_permissions(required_permissions):
                 is_active = validate_user_is_active(jwt_payload['user_id'])
                 if not is_active:
                     response = Response({'message': 'Usuário inativo.'}, status=status.HTTP_401_UNAUTHORIZED)
-                    response.delete_cookie('access_token')
-                    response.delete_cookie('refresh_token', path='/session/')
+                    response.delete_cookie(get_access_token_cookie_name())
+                    response.delete_cookie(get_refresh_token_cookie_name(), path='/session/')
                     return response
 
                 user_permissions = jwt_payload.get('permissions', [])
