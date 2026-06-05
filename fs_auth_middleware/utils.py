@@ -3,20 +3,23 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ImproperlyConfigured
 from django.apps import apps
-
-def get_required_setting(setting_name: str):
-    value = getattr(settings, setting_name, None)
-    if not value:
-        raise ImproperlyConfigured(
-            f"Defina {setting_name} no settings.py do projeto Django."
-        )
-    return value
+from rest_framework_simplejwt.settings import api_settings as simplejwt_settings
 
 def get_access_token_cookie_name():
-    return get_required_setting("FS_AUTH_ACCESS_TOKEN")
+    cookie_name = simplejwt_settings.AUTH_COOKIE
+    if not cookie_name:
+        raise ImproperlyConfigured(
+            "Configure SIMPLE_JWT['AUTH_COOKIE'] no settings.py do projeto Django."
+        )
+    return cookie_name
 
 def get_refresh_token_cookie_name():
-    return get_required_setting("FS_AUTH_REFRESH_TOKEN")
+    cookie_name = simplejwt_settings.AUTH_COOKIE_REFRESH
+    if not cookie_name:
+        raise ImproperlyConfigured(
+            "Configure SIMPLE_JWT['AUTH_COOKIE_REFRESH'] no settings.py do projeto Django."
+        )
+    return cookie_name
 
 def get_access_token_from_request(request):
     return request.COOKIES.get(get_access_token_cookie_name())

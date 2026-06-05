@@ -5,7 +5,7 @@ from .utils import *
 
 def has_permissions(required_permissions):
     """
-    Decorator para function-based views que exige todas as permissões do token JWT vindo do cookie configurado em FS_AUTH_ACCESS_TOKEN.
+    Decorator para function-based views que exige todas as permissões do token JWT vindo do cookie configurado em SIMPLE_JWT['AUTH_COOKIE'].
     """
     def decorator(view_func):
         @wraps(view_func)
