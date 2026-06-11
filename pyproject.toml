@@ -1,6 +1,6 @@
 [project]
 name = "fs-auth-middleware"
-version = "0.1.0"
+version = "0.2.0"
 description = "Middleware e ferramentas para autenticação JWT e permissões reutilizáveis com Django"
 readme = "README.md"
 requires-python = ">=3.9"
